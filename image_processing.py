@@ -10,8 +10,9 @@ class ImageProcessor:
         ratio = 12.5 / 677
         return ratio
 
-    def detekcja(self, folder_path, ratio, t=17):
+    def detekcja(self, folder_path, ratio, t=17, max_images=None):
         kp_list = []
+        num_images = 0
 
         for file_name in os.listdir(folder_path):
             if file_name.lower().endswith('.bmp'):
@@ -28,11 +29,15 @@ class ImageProcessor:
                     new_zero = (y + h / 2) * ratio
                     ex = img.shape
                     kp_list.extend(kp)
+                    num_images +=1
+                    if max_images is not None and num_images >= max_images:
+                        break
 
         return kp_list, new_zero, ex
 
-    def detekcja2(self, folder_path, t=17):
+    def detekcja2(self, folder_path, t=17, max_images=None):
         kp_list2 = []
+        num_images = 0
 
         for file_name in os.listdir(folder_path):
             if file_name.lower().endswith('.bmp'):
@@ -43,6 +48,9 @@ class ImageProcessor:
                     detector = cv2.FastFeatureDetector_create(t)
                     kp = detector.detect(img, None)
                     kp_list2.extend(kp)
+                    num_images += 1
+                    if max_images is not None and num_images >= max_images:
+                        break
 
         return kp_list2
 
